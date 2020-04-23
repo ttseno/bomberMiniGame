@@ -4,7 +4,7 @@ using UnityEngine.Events;
 
 
 [Serializable]
-public class BombEvent : UnityEvent<Vector3>
+public class BombEvent : UnityEvent<PlayerScript>
 {
 
 }
@@ -19,7 +19,9 @@ public class PlayerScript : MonoBehaviour
     private Sprite upNinjaSprite;
     [SerializeField]
     private Sprite downNinjaSprite;
-
+    [SerializeField]
+    private int allowedBombs = 1;
+    private int activeBombs;
 
     private bool collided = false;
 
@@ -30,11 +32,15 @@ public class PlayerScript : MonoBehaviour
 
     public BombEvent bombEvent;
 
+    public int bombSize;
+
     // Start is called before the first frame update
     void Start()
     {
         transform.position = new Vector3(-4.5f, 3.5f, 0f);
         spriteRenderer = GetComponent<SpriteRenderer>();
+        activeBombs = 0;
+        bombSize = 3;
     }
 
     // Update is called once per frame
@@ -46,9 +52,25 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
-    public void Move()
+    void OnTriggerEnter2D(Collider2D collider)
     {
-        //transform.Translate(direction * speed * Time.deltaTime);       
+        Debug.Log("collision");
+        collided = true;
+        transform.position = lastPosition;
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        collided = false;
+    }
+
+    public void DeactivateBomb()
+    {
+        activeBombs--;
+    }
+
+    private void Move()
+    { 
          Debug.Log("moving");
         transform.position += direction;      
     }
@@ -85,33 +107,12 @@ public class PlayerScript : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.Space))
         {
-            //CreateBomb();
-            bombEvent.Invoke(transform.position);
-        }
+            if(activeBombs < allowedBombs)
+            {
+                bombEvent.Invoke(this);
+                activeBombs++;
+            }
+        }            
     }
-
-    void OnTriggerEnter2D(Collider2D collider)
-    {
-        Debug.Log("collision");
-        collided = true;
-        transform.position = lastPosition;
-    }
-
-    void OnTriggerExit2D(Collider2D other)
-    {
-        collided = false;
-    }
-
-
-    //private void CreateBomb()
-    //{
-    //    var bomb = new GameObject("Bomb");
-    //    bomb.SetActive(true);
-    //    var bombRenderer = bomb.AddComponent<SpriteRenderer>();
-    //    bombRenderer.sprite = bombSprite;
-    //    bombRenderer.sortingOrder = 3;
-
-    //    bomb.transform.position = transform.position;
-    //}
-
+      
 }
