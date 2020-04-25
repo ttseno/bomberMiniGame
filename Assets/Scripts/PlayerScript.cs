@@ -37,7 +37,6 @@ public class PlayerScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        transform.position = new Vector3(-4.5f, 3.5f, 0f);
         spriteRenderer = GetComponent<SpriteRenderer>();
         activeBombs = 0;
         bombSize = 3;
