@@ -47,6 +47,7 @@ public class BombScript : MonoBehaviour
         var bombRenderer = bomb.GetComponent<SpriteRenderer>();
         yield return new WaitForSeconds(timer);
         bombRenderer.sprite = explodedBombSprite;
+        bombRenderer.sortingLayerName = "Explosion";
 
         CreateDestructionTrail(bomb.transform.position, player.bombSize);
 
@@ -59,40 +60,53 @@ public class BombScript : MonoBehaviour
         foreach (var trail in trailDirections)
         {
             var location = position + trail.Direction;
+            var hit = Physics2D.Raycast(location, Vector2.zero);
 
-            for (int i = 1; i < explosionSize; i++)
+            for (int i = 1; i < explosionSize && hit.collider is null; i++)
             {
                 var bombTrail = CreateGameObject(
                     "Bomb_trail",
                     location,
                     trail.Rotation,
-                    explosionTrailSprite);
+                    explosionTrailSprite,
+                    "Explosion");
 
                 Destroy(bombTrail, explosionTimer);
 
                 location += trail.Direction;
+                hit = Physics2D.Raycast(location, Vector2.zero);
             }
+
+            if (!(hit.collider is null) && hit.collider.name == "WallTileMap")
+                continue;
 
             var bombTrailEnd = CreateGameObject(
                 "Bomb_trail",
                 location,
                 trail.Rotation,
-                explosionTrailEndSprite);
+                explosionTrailEndSprite,
+                "Explosion");
 
             Destroy(bombTrailEnd, explosionTimer);
+            
         }
     }
 
-    private GameObject CreateGameObject(string name, Vector3 location, Vector3 rotation, Sprite sprite)
+    private GameObject CreateGameObject(string name, Vector3 location, Vector3 rotation, Sprite sprite, string sortingLayerName = "Powers")
     {
         var gameObjectName = name + location;
         var gameObject = new GameObject(gameObjectName);
         gameObject.SetActive(true);
         var gameObjectRenderer = gameObject.AddComponent<SpriteRenderer>();
+        gameObjectRenderer.sortingLayerName = sortingLayerName;
         gameObjectRenderer.sprite = sprite;
         gameObjectRenderer.sortingOrder = 3;
         gameObject.transform.position = location;
         gameObject.transform.Rotate(rotation);
+        var rigidBody = gameObject.AddComponent<Rigidbody2D>();
+        rigidBody.bodyType = RigidbodyType2D.Static;
+        var boxCollider = gameObject.AddComponent<BoxCollider2D>();
+        boxCollider.size = Vector2.one;
 
         return gameObject;
     }
