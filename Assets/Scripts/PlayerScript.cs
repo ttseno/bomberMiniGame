@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -19,26 +20,35 @@ public class PlayerScript : MonoBehaviour
     private Sprite upNinjaSprite;
     [SerializeField]
     private Sprite downNinjaSprite;
+    
+    [SerializeField]
+    private Sprite deadSprite;
+
     [SerializeField]
     private int allowedBombs = 1;
     private int activeBombs;
-
-    private bool collided = false;
-
-    private Vector3 lastPosition;
-    private Vector3 direction;
-
-    SpriteRenderer spriteRenderer;
 
     public BombEvent bombEvent;
 
     public int bombSize;
 
+    private Dictionary<Vector3, Sprite> SpriteToDirection;
+
+    private bool isDead = false;
+    private float deadTimer = 3f;
+
     // Start is called before the first frame update
     void Start()
     {
+        SpriteToDirection = new Dictionary<Vector3, Sprite>()
+        {
+            {Vector3.right, rightNinjaSprite},
+            {Vector3.left, leftNinjaSprite},
+            {Vector3.up, upNinjaSprite},
+            {Vector3.down, downNinjaSprite},
+        };
+
         transform.position = new Vector3(-4.5f, 3.5f, 0f);
-        spriteRenderer = GetComponent<SpriteRenderer>();
         activeBombs = 0;
         bombSize = 3;
     }
@@ -46,73 +56,76 @@ public class PlayerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!collided)
-        {
-            GetInput();
-        }
+        GetInput();
     }
 
     void OnTriggerEnter2D(Collider2D collider)
     {
-        Debug.Log("collision");
-        collided = true;
-        transform.position = lastPosition;
+        Debug.Log($"collision {collider.name}");
+        if (collider.name.Contains("Bomb_trail"))
+            Kill();
     }
 
-    void OnTriggerExit2D(Collider2D other)
+    public void Kill()
     {
-        collided = false;
+            ChangeSprite(deadSprite);
+            isDead = true;
+            Destroy(gameObject, deadTimer);
     }
-
+    
     public void DeactivateBomb()
     {
         activeBombs--;
     }
 
-    private void Move()
-    { 
-         Debug.Log("moving");
-        transform.position += direction;      
+    private void ChangeSprite(Sprite sprite)
+    {
+        var spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.sprite = sprite;
+    }
+
+    private void Move(Vector3 direction)
+    {
+
+        ChangeSprite(SpriteToDirection[direction]);
+
+        var newPosition = transform.position + direction;
+
+        var hit = Physics2D.Raycast(newPosition, Vector2.zero);
+        if (!(hit.collider is null) && !hit.collider.name.Contains("Bomb_trail")) return;
+        
+        Debug.Log("moving");
+        transform.position = newPosition;
     }
 
     private void GetInput()
     {
+        if (isDead) return;
+
         if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
         {
-            direction = Vector3.right;
-            lastPosition = transform.position;
-            spriteRenderer.sprite = rightNinjaSprite;
-            Move();
+            Move(Vector3.right);
         }
         else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            direction = Vector3.left;
-            lastPosition = transform.position;
-            spriteRenderer.sprite = leftNinjaSprite;
-            Move();
+            Move(Vector3.left);
         }
         else if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
         {
-            direction = Vector3.up;
-            lastPosition = transform.position;
-            spriteRenderer.sprite = upNinjaSprite;
-            Move();
+            Move(Vector3.up);
         }
         else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
         {
-            direction = Vector3.down;
-            lastPosition = transform.position;
-            spriteRenderer.sprite = downNinjaSprite;
-            Move();
+            Move(Vector3.down);
         }
         else if (Input.GetKeyDown(KeyCode.Space))
         {
-            if(activeBombs < allowedBombs)
+            if (activeBombs < allowedBombs)
             {
                 bombEvent.Invoke(this);
                 activeBombs++;
             }
-        }            
+        }
     }
-      
+
 }

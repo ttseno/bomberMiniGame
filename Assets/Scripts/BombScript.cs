@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -44,12 +45,16 @@ public class BombScript : MonoBehaviour
 
     IEnumerator DestroyBombRoutine(GameObject bomb, PlayerScript player)
     {
-        var bombRenderer = bomb.GetComponent<SpriteRenderer>();
         yield return new WaitForSeconds(timer);
+
+        var position = bomb.transform.position;
+        bomb.name = "Bomb_trail" + position;
+
+        var bombRenderer = bomb.GetComponent<SpriteRenderer>();
         bombRenderer.sprite = explodedBombSprite;
         bombRenderer.sortingLayerName = "Explosion";
 
-        CreateDestructionTrail(bomb.transform.position, player.bombSize);
+        CreateDestructionTrail(position, player.bombSize);
 
         Destroy(bomb, explosionTimer);
         player.DeactivateBomb();
@@ -57,6 +62,17 @@ public class BombScript : MonoBehaviour
 
     private void CreateDestructionTrail(Vector3 position, int explosionSize)
     {
+
+        var hitPlayer = Physics2D
+            .RaycastAll(position, Vector2.zero)
+            .FirstOrDefault(hit => hit.collider?.name.Contains("Player") ?? false);
+
+        if (!(hitPlayer.collider is null))
+        {
+            var playerCollided = hitPlayer.collider.gameObject.GetComponent<PlayerScript>();
+            playerCollided.Kill();
+        }
+
         foreach (var trail in trailDirections)
         {
             var location = position + trail.Direction;
@@ -77,8 +93,23 @@ public class BombScript : MonoBehaviour
                 hit = Physics2D.Raycast(location, Vector2.zero);
             }
 
-            if (!(hit.collider is null) && hit.collider.name == "WallTileMap")
-                continue;
+            if (!(hit.collider is null))
+            {
+                switch (hit.collider.name)
+                {
+                    case "Player":
+                    {
+                        var playerCollided = hit.collider.gameObject.GetComponent<PlayerScript>();
+                        playerCollided.Kill();
+
+                        break;
+                    }
+                    case "WallTileMap":
+                    {
+                        continue;
+                    }
+                }
+            }
 
             var bombTrailEnd = CreateGameObject(
                 "Bomb_trail",
@@ -88,7 +119,7 @@ public class BombScript : MonoBehaviour
                 "Explosion");
 
             Destroy(bombTrailEnd, explosionTimer);
-            
+
         }
     }
 
