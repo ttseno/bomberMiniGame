@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -42,25 +43,25 @@ namespace Assets.Scripts
             StartCoroutine(DestroyBombRoutine(bomb, player));
         }
 
-        IEnumerator DestroyBombRoutine(GameObject bomb, PlayerScript player)
-        {
-            var bombRenderer = bomb.GetComponent<SpriteRenderer>();
-            yield return new WaitForSeconds(timer);
-            bombRenderer.sprite = explodedBombSprite;
-            bombRenderer.sortingLayerName = "Explosion";
+    IEnumerator DestroyBombRoutine(GameObject bomb, PlayerScript player)
+    {
+        var bombRenderer = bomb.GetComponent<SpriteRenderer>();
+        yield return new WaitForSeconds(timer);
+        bombRenderer.sprite = explodedBombSprite;
+        bombRenderer.sortingLayerName = "Explosion";
 
-            CreateDestructionTrail(bomb.transform.position, player.bombSize);
+        CreateDestructionTrail(bomb.transform.position, player.bombSize);
 
             Destroy(bomb, explosionTimer);
             player.DeactivateBomb();
         }
 
-        private void CreateDestructionTrail(Vector3 position, int explosionSize)
+    private void CreateDestructionTrail(Vector3 position, int explosionSize)
+    {
+        foreach (var trail in trailDirections)
         {
-            foreach (var trail in trailDirections)
-            {
-                var location = position + trail.Direction;
-                var hit = Physics2D.Raycast(location, Vector2.zero);
+            var location = position + trail.Direction;
+            var hit = Physics2D.Raycast(location, Vector2.zero);
 
                 for (int i = 1; i < explosionSize && hit.collider is null; i++)
                 {
@@ -77,8 +78,8 @@ namespace Assets.Scripts
                     hit = Physics2D.Raycast(location, Vector2.zero);
                 }
 
-                if (!(hit.collider is null) && hit.collider.name == "WallTileMap")
-                    continue;
+            if (!(hit.collider is null) && hit.collider.name == "WallTileMap")
+                continue;
 
                 var bombTrailEnd = GameObjectHelper.CreateGameObject(
                     "Bomb_trail",
@@ -87,9 +88,10 @@ namespace Assets.Scripts
                     explosionTrailEndSprite,
                     "Explosion");
 
-                Destroy(bombTrailEnd, explosionTimer);
-            }
+            Destroy(bombTrailEnd, explosionTimer);
+            
         }
+    }
 
 
         public class TrailDirection
