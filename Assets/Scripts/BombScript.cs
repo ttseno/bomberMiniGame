@@ -126,6 +126,10 @@ namespace Assets.Scripts
 
                                 break;
                             }
+                        case string name when name.Contains("Bomb_trail"):
+                            {
+                                break;
+                            }
                         case string name when name.Contains("Bomb"):
                             {
                                 var collidedBomb = hit.collider.gameObject;
