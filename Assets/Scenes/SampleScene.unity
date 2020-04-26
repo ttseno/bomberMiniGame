@@ -1099,6 +1099,7 @@ MonoBehaviour:
   sizeUpBombPowerSprite: {fileID: 21300000, guid: db8d588d64c53a047841861e76274656,
     type: 3}
   addBombPowerSprite: {fileID: 21300000, guid: 26c27e933afd97344a52d74a9af2278e, type: 3}
+  addLifePowerSprite: {fileID: 21300000, guid: fb1faf631ec4d8f4b9295725a5be95e7, type: 3}
   groundTileMap: {fileID: 1862342525}
 --- !u!1 &518243778
 GameObject:

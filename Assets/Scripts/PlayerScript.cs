@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -35,6 +36,7 @@ public class PlayerScript : MonoBehaviour
     private Dictionary<Vector3, Sprite> SpriteToDirection;
 
     private bool isDead = false;
+    private int lifes = 1;
     private float deadTimer = 3f;
 
     // Start is called before the first frame update
@@ -70,7 +72,23 @@ public class PlayerScript : MonoBehaviour
     {
         ChangeSprite(deadSprite);
         isDead = true;
-        Destroy(gameObject, deadTimer);
+        lifes--;
+
+        StartCoroutine(StageDead());
+    }
+
+    IEnumerator StageDead()
+    {
+        yield return new WaitForSeconds(deadTimer);
+
+        if (lifes > 0)
+        {
+            ChangeSprite(downNinjaSprite);
+            isDead = false;
+        }
+        else
+            Destroy(gameObject);
+        
     }
     
     public void DeactivateBomb()
@@ -106,6 +124,14 @@ public class PlayerScript : MonoBehaviour
                 case string name when name.Contains("SizeUpBombPower"):
                     {
                         bombSize++;
+                        var powerObject = hit.collider.gameObject;
+                        Destroy(powerObject);
+
+                        break;
+                    }
+                case string name when name.Contains("AddLifeBombPower"):
+                    {
+                        lifes++;
                         var powerObject = hit.collider.gameObject;
                         Destroy(powerObject);
 

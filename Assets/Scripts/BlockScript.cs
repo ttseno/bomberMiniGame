@@ -14,12 +14,15 @@ namespace Assets.Scripts
         [SerializeField]
         private Sprite addBombPowerSprite;
         [SerializeField]
+        private Sprite addLifePowerSprite;
+        [SerializeField]
         private Tilemap groundTileMap;
 
         private float blockProbability = 0.85f;
 
-        private float addBombProbability = 0.3f;
-        private float sizeUpBombProbability = 0.2f;
+        private float addBombProbability = 0.25f;
+        private float sizeUpBombProbability = 0.1f;
+        private float addLifeProbability = 0.05f;
 
         private static readonly List<Vector2> directions = new List<Vector2>()
         {
@@ -59,6 +62,7 @@ namespace Assets.Scripts
                         var blockScript = block.AddComponent<BlockScript>();
                         blockScript.addBombPowerSprite = this.addBombPowerSprite;
                         blockScript.sizeUpBombPowerSprite = this.sizeUpBombPowerSprite;
+                        blockScript.addLifePowerSprite = this.addLifePowerSprite;
                     }
                 }
             }
@@ -77,6 +81,8 @@ namespace Assets.Scripts
                     return ("AddBombPower", addBombPowerSprite);
                 case float value when value < addBombProbability + sizeUpBombProbability:
                     return ("SizeUpBombPower", sizeUpBombPowerSprite);
+                case float value when value < addBombProbability + sizeUpBombProbability + addLifeProbability:
+                    return ("AddLifeBombPower", addLifePowerSprite);
                 default:
                     return ("", null);
             }
