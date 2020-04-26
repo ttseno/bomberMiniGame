@@ -23,6 +23,8 @@ namespace Assets.Scripts
 
         #endregion
 
+        private PlayerScript player;
+
         private int explosionTimer = 1;
 
         List<TrailDirection> trailDirections = new List<TrailDirection> {
@@ -31,7 +33,7 @@ namespace Assets.Scripts
         new TrailDirection { Direction = Vector3.left, Rotation = Vector3.forward * 180 },
         new TrailDirection { Direction = Vector3.down, Rotation = Vector3.forward * 270 }
     };
-
+        bool isDestroying = false;
         public void CreateBomb(PlayerScript player)
         {
             var bomb = GameObjectHelper.CreateGameObject(
@@ -40,28 +42,45 @@ namespace Assets.Scripts
                    Vector3.zero,
                    bombSprite);
 
-            StartCoroutine(DestroyBombRoutine(bomb, player));
+            var bombScript = bomb.AddComponent<BombScript>();
+            bombScript.player = player;
+            bombScript.explodedBombSprite = explodedBombSprite;
+            bombScript.explosionTrailEndSprite = explosionTrailEndSprite;
+            bombScript.explosionTrailSprite = explosionTrailSprite;
+            bombScript.explosionTimer = explosionTimer;
+            bombScript.timer = timer;
+
+
+            bombScript.StartCountDown();
         }
-
-    IEnumerator DestroyBombRoutine(GameObject bomb, PlayerScript player)
-    {
-        var bombRenderer = bomb.GetComponent<SpriteRenderer>();
-        yield return new WaitForSeconds(timer);
-        bombRenderer.sprite = explodedBombSprite;
-        bombRenderer.sortingLayerName = "Explosion";
-
-        CreateDestructionTrail(bomb.transform.position, player.bombSize);
-
-            Destroy(bomb, explosionTimer);
-            player.DeactivateBomb();
-        }
-
-    private void CreateDestructionTrail(Vector3 position, int explosionSize)
-    {
-        foreach (var trail in trailDirections)
+        
+        public void StartCountDown()
         {
-            var location = position + trail.Direction;
-            var hit = Physics2D.Raycast(location, Vector2.zero);
+            StartCoroutine(DestroyBombRoutine());
+        }
+
+        IEnumerator DestroyBombRoutine()
+        {
+            yield return new WaitForSeconds(timer);
+            DestroyBomb();
+        }
+
+        private void CreateDestructionTrail(Vector3 position, int explosionSize)
+        {
+            var hitPlayer = Physics2D
+                .RaycastAll(position, Vector2.zero)
+                .FirstOrDefault(hit => hit.collider?.name.Contains("Player") ?? false);
+
+            if (!(hitPlayer.collider is null))
+            {
+                var playerCollided = hitPlayer.collider.gameObject.GetComponent<PlayerScript>();
+                playerCollided.Kill();
+            }
+
+            foreach (var trail in trailDirections)
+            {
+                var location = position + trail.Direction;
+                var hit = Physics2D.Raycast(location, Vector2.zero);
 
                 for (int i = 1; i < explosionSize && hit.collider is null; i++)
                 {
@@ -78,8 +97,51 @@ namespace Assets.Scripts
                     hit = Physics2D.Raycast(location, Vector2.zero);
                 }
 
-            if (!(hit.collider is null) && hit.collider.name == "WallTileMap")
-                continue;
+                if (!(hit.collider is null))
+                {
+                    switch (hit.collider.name)
+                    {
+                        case "Player":
+                            {
+                                var playerCollided = hit.collider.gameObject.GetComponent<PlayerScript>();
+                                playerCollided.Kill();
+
+                                break;
+                            }
+                        case "WallTileMap":
+                            {
+                                continue;
+                            }
+                        case string name when name.Contains("Block"):
+                            {
+                                var blockCollided = hit.collider.gameObject.GetComponent<BlockScript>();
+                                blockCollided.Destroy();
+
+                                break;
+                            }
+                        case string name when name.Contains("Power"):
+                            {
+                                var powerCollided = hit.collider.gameObject;
+                                Destroy(powerCollided);
+
+                                break;
+                            }
+                        case string name when name.Contains("Bomb"):
+                            {
+                                var collidedBomb = hit.collider.gameObject;
+                                var bombScript = collidedBomb.GetComponent<BombScript>();
+
+                                bombScript.DestroyBomb();
+
+                                break;
+                            }
+                        default:
+                            {
+                                Debug.Log($"Bomb got {hit.collider.name}");
+                                break;
+                            }
+                    }
+                }
 
                 var bombTrailEnd = GameObjectHelper.CreateGameObject(
                     "Bomb_trail",
@@ -88,12 +150,29 @@ namespace Assets.Scripts
                     explosionTrailEndSprite,
                     "Explosion");
 
-            Destroy(bombTrailEnd, explosionTimer);
-            
+                Destroy(bombTrailEnd, explosionTimer);
+
+            }
         }
-    }
 
+        private void DestroyBomb()
+        {
+            if (isDestroying) return;
+            isDestroying = true;
 
+            var position = transform.position;
+            name = "Bomb_trail" + position;
+
+            var bombRenderer = GetComponent<SpriteRenderer>();
+            bombRenderer.sprite = explodedBombSprite;
+            bombRenderer.sortingLayerName = "Explosion";
+
+            CreateDestructionTrail(position, player.bombSize);
+
+            Destroy(gameObject, explosionTimer);
+            player.DeactivateBomb();
+        }
+              
         public class TrailDirection
         {
             public Vector3 Direction { get; set; }

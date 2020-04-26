@@ -1096,6 +1096,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blockSprite: {fileID: 21300000, guid: 171f71fe23ce2334c960fdda9b683209, type: 3}
+  sizeUpBombPowerSprite: {fileID: 21300000, guid: db8d588d64c53a047841861e76274656,
+    type: 3}
+  addBombPowerSprite: {fileID: 21300000, guid: 26c27e933afd97344a52d74a9af2278e, type: 3}
   groundTileMap: {fileID: 1862342525}
 --- !u!1 &518243778
 GameObject:
@@ -1213,7 +1216,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 518243778}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.5, y: 1.5, z: 0}
+  m_LocalPosition: {x: -4.5, y: 3.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 0}
   m_Children: []
   m_Father: {fileID: 0}

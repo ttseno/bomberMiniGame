@@ -50,7 +50,7 @@ public class PlayerScript : MonoBehaviour
 
         transform.position = new Vector3(-4.5f, 3.5f, 0f);
         activeBombs = 0;
-        bombSize = 3;
+        bombSize = 0;
     }
 
     // Update is called once per frame
@@ -68,9 +68,9 @@ public class PlayerScript : MonoBehaviour
 
     public void Kill()
     {
-            ChangeSprite(deadSprite);
-            isDead = true;
-            Destroy(gameObject, deadTimer);
+        ChangeSprite(deadSprite);
+        isDead = true;
+        Destroy(gameObject, deadTimer);
     }
     
     public void DeactivateBomb()
@@ -86,13 +86,37 @@ public class PlayerScript : MonoBehaviour
 
     private void Move(Vector3 direction)
     {
-
         ChangeSprite(SpriteToDirection[direction]);
 
         var newPosition = transform.position + direction;
 
         var hit = Physics2D.Raycast(newPosition, Vector2.zero);
-        if (!(hit.collider is null) && !hit.collider.name.Contains("Bomb_trail")) return;
+        if (!(hit.collider is null))
+        {
+            switch (hit.collider.name)
+            {
+                case string name when name.Contains("AddBombPower"):
+                    {
+                        allowedBombs++;
+                        var powerObject = hit.collider.gameObject;
+                        Destroy(powerObject);
+
+                        break;
+                    }
+                case string name when name.Contains("SizeUpBombPower"):
+                    {
+                        bombSize++;
+                        var powerObject = hit.collider.gameObject;
+                        Destroy(powerObject);
+
+                        break;
+                    }
+                case string name when name.Contains("Bomb_trail"):
+                    break;
+                default:
+                    return;
+            }
+        }
         
         Debug.Log("moving");
         transform.position = newPosition;
