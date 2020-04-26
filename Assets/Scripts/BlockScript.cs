@@ -18,8 +18,8 @@ namespace Assets.Scripts
 
         private float blockProbability = 0.85f;
 
-        private float addBombProbability = 1f;
-        private float sizeUpBombProbability = 1f;
+        private float addBombProbability = 0.3f;
+        private float sizeUpBombProbability = 0.2f;
 
         private static readonly List<Vector2> directions = new List<Vector2>()
         {
@@ -69,28 +69,33 @@ namespace Assets.Scripts
             return Random.value < probability;
         }
 
+        private (string name, Sprite sprite) ShufflePower()
+        {
+            switch (Random.value)
+            {
+                case float value when value < addBombProbability:
+                    return ("AddBombPower", addBombPowerSprite);
+                case float value when value < addBombProbability + sizeUpBombProbability:
+                    return ("SizeUpBombPower", sizeUpBombPowerSprite);
+                default:
+                    return ("", null);
+            }
+        }
+
         public void Destroy()
         {
             Debug.Log("Block destroyed");
-            if (ShouldBuild(addBombProbability))
-            {
-                var block = GameObjectHelper.CreateGameObject(
-                   "AddBombPower",
-                   transform.position,
-                   Vector3.zero,
-                   addBombPowerSprite,
-                   "Powers");
-            }
-            else if (ShouldBuild(sizeUpBombProbability))
-            {
-                var block = GameObjectHelper.CreateGameObject(
-                   "SizeUpBombPower",
-                   transform.position,
-                   Vector3.zero,
-                   sizeUpBombPowerSprite,
-                   "Powers");
-            }
+            (var name, var sprite) = ShufflePower();
+
             Destroy(gameObject);
+            if (sprite is null) return;
+
+            var block = GameObjectHelper.CreateGameObject(
+                   name,
+                   transform.position,
+                   Vector3.zero,
+                   sprite,
+                   "Powers");
         }
     }
 }
