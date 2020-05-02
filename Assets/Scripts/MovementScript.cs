@@ -1,57 +1,47 @@
 ﻿using Assets.Scripts.Configurations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Assets.Scripts
 {    
-    public class MovementScript 
+    public class MovementScript : MonoBehaviour
     {
-        private MovementConfig movement;
+        [SerializeField]
+        private MovementConfig movementConfig;
 
-        public MovementScript(MovementConfig movementConfig)
+
+        private PlayerScript player;
+
+        void Start()
         {
-            if(!movementConfig.IsValidConfig())
-            {
-                Debug.Log("invalid movement config");
-            }
-            else
-            {
-                movement = movementConfig;
-            }
+            player = gameObject.GetComponent<PlayerScript>();
+        }
+
+        void Update()
+        {
+            GetInput();
         }
         
-        public void GetInput(PlayerScript player)
+        private void GetInput()
         {
-            if(movement is null)
+            if (movementConfig.IsValidConfig())
             {
-
-            }
-
-            if (player.stats.IsDead) return;
-
-            if (movement.IsValidConfig())
-            {
-                if (Input.GetKeyDown(movement.RightKey))
+                if (Input.GetKeyDown(movementConfig.RightKey))
                 {
                     player.Move(Vector3.right);
                 }
-                else if (Input.GetKeyDown(movement.LeftKey))
+                else if (Input.GetKeyDown(movementConfig.LeftKey))
                 {
                     player.Move(Vector3.left);
                 }
-                else if (Input.GetKeyDown(movement.UpKey))
+                else if (Input.GetKeyDown(movementConfig.UpKey))
                 {
                     player.Move(Vector3.up);
                 }
-                else if (Input.GetKeyDown(movement.DownKey))
+                else if (Input.GetKeyDown(movementConfig.DownKey))
                 {
                     player.Move(Vector3.down);
                 }
-                else if (Input.GetKeyDown(movement.BombKey))
+                else if (Input.GetKeyDown(movementConfig.BombKey))
                 {
                     player.CreateBomb();
                 }

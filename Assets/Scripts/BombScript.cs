@@ -21,11 +21,14 @@ namespace Assets.Scripts
         [SerializeField]
         private int timer = 5;
 
+        public InformBombEvent CreatedBombEvent;
+        public InformBombEvent ExplodedBombEvent;
         #endregion
 
         private PlayerScript player;
 
         private int explosionTimer = 1;
+        public  int bombSize;
 
         List<TrailDirection> trailDirections = new List<TrailDirection> {
         new TrailDirection { Direction = Vector3.right, Rotation = Vector3.forward * 0 },
@@ -34,6 +37,8 @@ namespace Assets.Scripts
         new TrailDirection { Direction = Vector3.down, Rotation = Vector3.forward * 270 }
     };
         bool isDestroying = false;
+
+
         public void CreateBomb(PlayerScript player)
         {
             var bomb = GameObjectHelper.CreateGameObject(
@@ -44,14 +49,18 @@ namespace Assets.Scripts
 
             var bombScript = bomb.AddComponent<BombScript>();
             bombScript.player = player;
+            bombScript.bombSize = player.stats.BombSize;
             bombScript.explodedBombSprite = explodedBombSprite;
             bombScript.explosionTrailEndSprite = explosionTrailEndSprite;
             bombScript.explosionTrailSprite = explosionTrailSprite;
             bombScript.explosionTimer = explosionTimer;
             bombScript.timer = timer;
-
+            bombScript.CreatedBombEvent = CreatedBombEvent;
+            bombScript.ExplodedBombEvent = ExplodedBombEvent;
 
             bombScript.StartCountDown();
+
+            CreatedBombEvent.Invoke(bombScript);
         }
         
         public void StartCountDown()
@@ -101,6 +110,7 @@ namespace Assets.Scripts
                 {
                     switch (hit.collider.name)
                     {
+                        case "Player - Enemy":
                         case "Player":
                             {
                                 var playerCollided = hit.collider.gameObject.GetComponent<PlayerScript>();
@@ -171,10 +181,18 @@ namespace Assets.Scripts
             bombRenderer.sprite = explodedBombSprite;
             bombRenderer.sortingLayerName = "Explosion";
 
-            CreateDestructionTrail(position, player.stats.BombSize);
+            CreateDestructionTrail(position, this.bombSize);
 
-            Destroy(gameObject, explosionTimer);
+            StartCoroutine(DesactivateBomb());
+        }
+
+        IEnumerator DesactivateBomb()
+        {
+            yield return new WaitForSeconds(explosionTimer);
+                
+            Destroy(gameObject);
             player.DeactivateBomb();
+            ExplodedBombEvent.Invoke(this);
         }
               
         public class TrailDirection

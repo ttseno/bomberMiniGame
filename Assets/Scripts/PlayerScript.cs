@@ -18,16 +18,13 @@ public class PlayerScript : MonoBehaviour
     [SerializeField]
     private PlayerSkinConfig skinConfig;
     [SerializeField]
-    private MovementConfig movementConfig;
-    [SerializeField]
     public PlayerStats stats;
     
     public BombEvent bombEvent;
       
     private float deadTimer = 3f;
 
-    public MovementScript movementScript;
-    public Dictionary<Vector3, Sprite> SpriteToDirection;
+    private Dictionary<Vector3, Sprite> SpriteToDirection;
 
     // Start is called before the first frame update
     void Start()
@@ -40,18 +37,9 @@ public class PlayerScript : MonoBehaviour
             {Vector3.down, skinConfig.DownSprite},
         };
 
-        //transform.position = new Vector3(-4.5f, 3.5f, 0f);
         stats.ActiveBombs = 0;
-        stats.BombSize = 0;
-
-        movementScript = new MovementScript(movementConfig);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        movementScript.GetInput(this);
-    }
 
     void OnTriggerEnter2D(Collider2D collider)
     {
@@ -95,6 +83,7 @@ public class PlayerScript : MonoBehaviour
 
     public void Move(Vector3 direction)
     {
+        if (stats.IsDead) return;
         ChangeSprite(SpriteToDirection[direction]);
 
         var newPosition = transform.position + direction;
@@ -135,13 +124,13 @@ public class PlayerScript : MonoBehaviour
             }
         }
         
-        Debug.Log("moving");
         transform.position = newPosition;
     }
        
     public void CreateBomb()
     {
-        if (stats.ActiveBombs < stats.AllowedBombs)
+        if (stats.IsDead) return;
+        if (stats.HasAvailableBomb())
         {
             bombEvent.Invoke(this);
             stats.ActiveBombs++;

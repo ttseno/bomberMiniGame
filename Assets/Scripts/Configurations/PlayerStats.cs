@@ -14,5 +14,7 @@ namespace Assets.Scripts.Configurations
         public int BombSize;
         public int Lifes = 1; 
         public bool IsDead = false;
+
+        public bool HasAvailableBomb() => ActiveBombs < AllowedBombs;
     }
 }
