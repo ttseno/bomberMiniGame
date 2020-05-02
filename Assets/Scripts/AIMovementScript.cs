@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 using Random = UnityEngine.Random;
@@ -25,6 +22,7 @@ namespace Assets.Scripts
         private List<Vector3> dangerZone = new List<Vector3>();
 
         private float nextTime;
+        private Vector3 lastDirection = Vector3.zero;
         private List<Vector3> directions = new List<Vector3>()
         {
             Vector3.left,
@@ -51,13 +49,29 @@ namespace Assets.Scripts
                 MoveAwayFromTheBomb();
             }
             else if (HasBlockAround() && player.stats.HasAvailableBomb())
+            {
+                lastDirection = Vector3.zero;
                 player.CreateBomb();
+            }
             else
             {
-                var nextPosition = AnyDirection();
+                lastDirection = Vector3.zero;
+                var directionToPower = DirectionToPowerAround();
+                var nextPosition = directionToPower == Vector3.zero ? AnyDirection() : directionToPower;
                 if (!dangerZone.Contains(player.transform.position + nextPosition))
                     player.Move(nextPosition);
             }
+        }
+
+        private Vector3 DirectionToPowerAround()
+        {
+            return directions.FirstOrDefault(direction =>
+            {
+                var position = transform.position + direction;
+                return Physics2D
+                    .RaycastAll(position, Vector2.zero)
+                    .Any(hit => hit.collider?.name.Contains("Power") ?? false);
+            });
         }
 
         private bool HasBlockAround()
@@ -78,7 +92,7 @@ namespace Assets.Scripts
                 var position = nextPosition + direction;
                 var rayCast = Physics2D
                     .RaycastAll(position, Vector2.zero);
-                
+
                 var any = rayCast.Any();
 
                 return !any;
@@ -89,22 +103,22 @@ namespace Assets.Scripts
         {
             var position = transform.position;
 
-            foreach (var direction in directions)
+            foreach (var direction in directions.Where(x => x != -lastDirection))
             {
-                var nextPosition= transform.position + direction;
+                var nextPosition = transform.position + direction;
                 if (HasExit(nextPosition) || !dangerZone.Contains(nextPosition))
                     player.Move(direction);
 
                 if (transform.position != position)
+                {
+                    lastDirection = direction;
                     break;
+                }
 
             }
         }
 
-        public Vector3 AnyDirection()
-        {
-            return directions[Random.Range(0, directions.Count)];
-        }
+        public Vector3 AnyDirection() => directions[Random.Range(0, directions.Count)];
 
         public void AddToDangerZone(BombScript bomb)
         {
