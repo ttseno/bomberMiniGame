@@ -1116,7 +1116,7 @@ GameObject:
   - component: {fileID: 518243782}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1133,16 +1133,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfd1e0f06a0ae164283f0f0c7aecf28e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightNinjaSprite: {fileID: -8267143829496680025, guid: fe8e334a97c96d449ad06f30bb57cd39,
-    type: 3}
-  leftNinjaSprite: {fileID: 3435474632446302526, guid: fe8e334a97c96d449ad06f30bb57cd39,
-    type: 3}
-  upNinjaSprite: {fileID: 328472425487471295, guid: fe8e334a97c96d449ad06f30bb57cd39,
-    type: 3}
-  downNinjaSprite: {fileID: 5021437186470177531, guid: fe8e334a97c96d449ad06f30bb57cd39,
-    type: 3}
-  deadSprite: {fileID: 21300000, guid: 989e23aae52a2094694108a0a83a347e, type: 3}
-  allowedBombs: 1
+  skinConfig:
+    RightSprite: {fileID: -8267143829496680025, guid: fe8e334a97c96d449ad06f30bb57cd39,
+      type: 3}
+    LeftSprite: {fileID: 3435474632446302526, guid: fe8e334a97c96d449ad06f30bb57cd39,
+      type: 3}
+    UpSprite: {fileID: 328472425487471295, guid: fe8e334a97c96d449ad06f30bb57cd39,
+      type: 3}
+    DownSprite: {fileID: 5021437186470177531, guid: fe8e334a97c96d449ad06f30bb57cd39,
+      type: 3}
+    DeadSprite: {fileID: 21300000, guid: 989e23aae52a2094694108a0a83a347e, type: 3}
+  movementConfig:
+    UpKey: 119
+    DownKey: 115
+    LeftKey: 97
+    RightKey: 100
+    BombKey: 32
+  stats:
+    AllowedBombs: 1
+    ActiveBombs: 0
+    BombSize: 0
+    Lifes: 1
+    IsDead: 0
   bombEvent:
     m_PersistentCalls:
       m_Calls:
@@ -1157,7 +1169,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  bombSize: 0
 --- !u!212 &518243780
 SpriteRenderer:
   m_ObjectHideFlags: 0

@@ -171,7 +171,7 @@ namespace Assets.Scripts
             bombRenderer.sprite = explodedBombSprite;
             bombRenderer.sortingLayerName = "Explosion";
 
-            CreateDestructionTrail(position, player.bombSize);
+            CreateDestructionTrail(position, player.stats.BombSize);
 
             Destroy(gameObject, explosionTimer);
             player.DeactivateBomb();

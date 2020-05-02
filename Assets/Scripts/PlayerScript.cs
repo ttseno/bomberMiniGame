@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Assets.Scripts;
+using Assets.Scripts.Configurations;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,51 +16,41 @@ public class BombEvent : UnityEvent<PlayerScript>
 public class PlayerScript : MonoBehaviour
 {
     [SerializeField]
-    private Sprite rightNinjaSprite;
+    private PlayerSkinConfig skinConfig;
     [SerializeField]
-    private Sprite leftNinjaSprite;
+    private MovementConfig movementConfig;
     [SerializeField]
-    private Sprite upNinjaSprite;
-    [SerializeField]
-    private Sprite downNinjaSprite;
+    public PlayerStats stats;
     
-    [SerializeField]
-    private Sprite deadSprite;
-
-    [SerializeField]
-    private int allowedBombs = 1;
-    private int activeBombs;
-
     public BombEvent bombEvent;
-
-    public int bombSize;
-
-    private Dictionary<Vector3, Sprite> SpriteToDirection;
-
-    private bool isDead = false;
-    private int lifes = 1;
+      
     private float deadTimer = 3f;
+
+    public MovementScript movementScript;
+    public Dictionary<Vector3, Sprite> SpriteToDirection;
 
     // Start is called before the first frame update
     void Start()
     {
         SpriteToDirection = new Dictionary<Vector3, Sprite>()
         {
-            {Vector3.right, rightNinjaSprite},
-            {Vector3.left, leftNinjaSprite},
-            {Vector3.up, upNinjaSprite},
-            {Vector3.down, downNinjaSprite},
+            {Vector3.right, skinConfig.RightSprite},
+            {Vector3.left, skinConfig.LeftSprite},
+            {Vector3.up, skinConfig.UpSprite},
+            {Vector3.down, skinConfig.DownSprite},
         };
 
-        transform.position = new Vector3(-4.5f, 3.5f, 0f);
-        activeBombs = 0;
-        bombSize = 0;
+        //transform.position = new Vector3(-4.5f, 3.5f, 0f);
+        stats.ActiveBombs = 0;
+        stats.BombSize = 0;
+
+        movementScript = new MovementScript(movementConfig);
     }
 
     // Update is called once per frame
     void Update()
     {
-        GetInput();
+        movementScript.GetInput(this);
     }
 
     void OnTriggerEnter2D(Collider2D collider)
@@ -70,9 +62,9 @@ public class PlayerScript : MonoBehaviour
 
     public void Kill()
     {
-        ChangeSprite(deadSprite);
-        isDead = true;
-        lifes--;
+        ChangeSprite(skinConfig.DeadSprite);
+        stats.IsDead = true;
+        stats.Lifes--;
 
         StartCoroutine(StageDead());
     }
@@ -81,28 +73,27 @@ public class PlayerScript : MonoBehaviour
     {
         yield return new WaitForSeconds(deadTimer);
 
-        if (lifes > 0)
+        if (stats.Lifes > 0)
         {
-            ChangeSprite(downNinjaSprite);
-            isDead = false;
+            ChangeSprite(skinConfig.DownSprite);
+            stats.IsDead = false;
         }
         else
-            Destroy(gameObject);
-        
+            Destroy(gameObject);        
     }
     
     public void DeactivateBomb()
     {
-        activeBombs--;
+        stats.ActiveBombs--;
     }
 
-    private void ChangeSprite(Sprite sprite)
+    public void ChangeSprite(Sprite sprite)
     {
         var spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.sprite = sprite;
     }
 
-    private void Move(Vector3 direction)
+    public void Move(Vector3 direction)
     {
         ChangeSprite(SpriteToDirection[direction]);
 
@@ -115,7 +106,7 @@ public class PlayerScript : MonoBehaviour
             {
                 case string name when name.Contains("AddBombPower"):
                     {
-                        allowedBombs++;
+                        stats.AllowedBombs++;
                         var powerObject = hit.collider.gameObject;
                         Destroy(powerObject);
 
@@ -123,7 +114,7 @@ public class PlayerScript : MonoBehaviour
                     }
                 case string name when name.Contains("SizeUpBombPower"):
                     {
-                        bombSize++;
+                        stats.BombSize++;
                         var powerObject = hit.collider.gameObject;
                         Destroy(powerObject);
 
@@ -131,7 +122,7 @@ public class PlayerScript : MonoBehaviour
                     }
                 case string name when name.Contains("AddLifeBombPower"):
                     {
-                        lifes++;
+                        stats.Lifes++;
                         var powerObject = hit.collider.gameObject;
                         Destroy(powerObject);
 
@@ -147,35 +138,14 @@ public class PlayerScript : MonoBehaviour
         Debug.Log("moving");
         transform.position = newPosition;
     }
-
-    private void GetInput()
+       
+    public void CreateBomb()
     {
-        if (isDead) return;
-
-        if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+        if (stats.ActiveBombs < stats.AllowedBombs)
         {
-            Move(Vector3.right);
-        }
-        else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            Move(Vector3.left);
-        }
-        else if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            Move(Vector3.up);
-        }
-        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            Move(Vector3.down);
-        }
-        else if (Input.GetKeyDown(KeyCode.Space))
-        {
-            if (activeBombs < allowedBombs)
-            {
-                bombEvent.Invoke(this);
-                activeBombs++;
-            }
+            bombEvent.Invoke(this);
+            stats.ActiveBombs++;
         }
     }
-
+    
 }
