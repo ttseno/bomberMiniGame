@@ -66,10 +66,10 @@ public class PlayerScript : MonoBehaviour
         stats.IsDead = true;
         stats.Lifes--;
 
-        StartCoroutine(StageDead());
+        StartCoroutine(StageDeath());
     }
 
-    IEnumerator StageDead()
+    IEnumerator StageDeath()
     {
         yield return new WaitForSeconds(deadTimer);
 
