@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Assets.Scripts.Configurations
@@ -19,10 +15,10 @@ namespace Assets.Scripts.Configurations
         public bool IsValidConfig()
         {
             return UpKey != KeyCode.None
-                || DownKey != KeyCode.None
-                || LeftKey != KeyCode.None
-                || RightKey != KeyCode.None
-                || BombKey != KeyCode.None;
+                && DownKey != KeyCode.None
+                && LeftKey != KeyCode.None
+                && RightKey != KeyCode.None
+                && BombKey != KeyCode.None;
         }
     }
 }
