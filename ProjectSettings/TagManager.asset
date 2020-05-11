@@ -3,7 +3,12 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Wall
+  - Powers
+  - Blocks
+  - Explosion
+  - Bomb
   layers:
   - Default
   - TransparentFX
@@ -49,6 +54,9 @@ TagManager:
     locked: 0
   - name: Blocks
     uniqueID: 2115011549
+    locked: 0
+  - name: Bomb
+    uniqueID: 3642260115
     locked: 0
   - name: Player
     uniqueID: 2519549103

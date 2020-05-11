@@ -281,7 +281,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1775418193
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_Sprite: {fileID: 5021437186470177531, guid: fe8e334a97c96d449ad06f30bb57cd39,
     type: 3}
@@ -323,7 +323,7 @@ GameObject:
   - component: {fileID: 51523449}
   m_Layer: 0
   m_Name: WallTileMap
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
@@ -1418,7 +1418,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1775418193
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_Sprite: {fileID: 5021437186470177531, guid: fe8e334a97c96d449ad06f30bb57cd39,
     type: 3}

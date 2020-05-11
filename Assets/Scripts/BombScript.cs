@@ -45,7 +45,8 @@ namespace Assets.Scripts
                    "Bomb",
                    player.transform.position,
                    Vector3.zero,
-                   bombSprite);
+                   bombSprite,
+                   "Bomb");
 
             var bombScript = bomb.AddComponent<BombScript>();
             bombScript.player = player;
