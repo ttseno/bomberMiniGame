@@ -23,12 +23,22 @@ namespace Assets.Scripts
 
         private float nextTime;
         private Vector3 lastDirection = Vector3.zero;
-        private List<Vector3> directions = new List<Vector3>()
+        private static List<Vector3> directions = new List<Vector3>()
         {
             Vector3.left,
             Vector3.up,
             Vector3.down,
             Vector3.right
+        };
+        
+        private static Dictionary<string, float> tileWeights = new Dictionary<string, float>()
+        {
+            { "Explosion", -1},
+            { "Bomb", -1},
+            { "Wall", 1},
+            { "Blocks", 30},
+            { "Player", 50},
+            { "Powers", 70},
         };
 
         void Start()
@@ -48,30 +58,58 @@ namespace Assets.Scripts
             {
                 MoveAwayFromTheBomb();
             }
-            else if (HasBlockAround() && player.stats.HasAvailableBomb())
-            {
-                lastDirection = Vector3.zero;
-                player.CreateBomb();
-            }
             else
             {
+                var lastPosition = transform.position;
                 lastDirection = Vector3.zero;
-                var directionToPower = DirectionToPowerAround();
-                var nextPosition = directionToPower == Vector3.zero ? AnyDirection() : directionToPower;
-                if (!dangerZone.Contains(player.transform.position + nextPosition))
-                    player.Move(nextPosition);
+                var nextDirection = MostValuableDirection();
+                if (nextDirection != Vector3.zero && !dangerZone.Contains(player.transform.position + nextDirection))
+                    player.Move(nextDirection);
+
+                //if (HasBlockAround() && player.stats.HasAvailableBomb())
+                if(transform.position == lastPosition)
+                    CreateBomb();
+
             }
         }
 
-        private Vector3 DirectionToPowerAround()
+        private void CreateBomb()
         {
-            return directions.FirstOrDefault(direction =>
+            var newBombRange = BombDestructionRange(transform.position, player.stats.BombSize);
+            if(!dangerZone.Any(x => newBombRange.Any(y => y.y == x.y && y.x == x.x)))
+                player.CreateBomb();
+        }
+
+
+        private Vector3 MostValuableDirection()
+        {
+            RaycastHit2D RaycastHit2D(Vector3 direction)
             {
-                var position = transform.position + direction;
-                return Physics2D
-                    .RaycastAll(position, Vector2.zero)
-                    .Any(hit => hit.collider?.name.Contains("Power") ?? false);
+                var hitList = Physics2D
+                    .RaycastAll(transform.position, direction);
+                var hit2 = hitList.FirstOrDefault(x => x.collider.name != transform.name);
+                return hit2;
+            }
+
+            var hits = directions.Select(x => new
+            {
+                Direction = x,
+                Hit = RaycastHit2D(x)
             });
+
+            var mostValuableHit = hits.Aggregate((act, next) => PathWeight(act.Hit) > PathWeight(next.Hit) ? act : next);
+            
+            return mostValuableHit.Hit.collider.gameObject.tag == "Wall" ? Vector3.zero : mostValuableHit.Direction;
+            
+            float PathWeight(RaycastHit2D hit)
+            {
+                var distance = hit.distance;
+
+                if (!tileWeights.TryGetValue(hit.collider.gameObject.tag, out var rewardWeight))
+                    return 0;
+
+                return rewardWeight / distance;
+            }
         }
 
         private bool HasBlockAround()
@@ -103,9 +141,15 @@ namespace Assets.Scripts
         {
             var position = transform.position;
 
-            foreach (var direction in directions.Where(x => x != -lastDirection))
+            foreach (var direction in directions.Where(x => x != -lastDirection).OrderBy(x => Random.value))
             {
                 var nextPosition = transform.position + direction;
+
+                var rayCast = Physics2D
+                    .RaycastAll(nextPosition, Vector2.zero);
+                if(rayCast.Any(x => x.collider.gameObject.tag == "Explosion"))
+                    continue;
+
                 if (HasExit(nextPosition) || !dangerZone.Contains(nextPosition))
                     player.Move(direction);
 
@@ -120,20 +164,28 @@ namespace Assets.Scripts
 
         public Vector3 AnyDirection() => directions[Random.Range(0, directions.Count)];
 
-        public void AddToDangerZone(BombScript bomb)
+        private List<Vector3> BombDestructionRange(Vector3 bombPosition, int bombSize)
         {
-            print("Adding to danger zone");
-
-            dangerZone.Add(bomb.transform.position);
+            var destructionRange = new List<Vector3>()
+            {
+                bombPosition
+            };
 
             foreach (var direction in directions)
             {
-                for (int i = 1; i <= bomb.bombSize + 1; i++)
+                for (int i = 1; i <= bombSize; i++)
                 {
-                    dangerZone.Add(bomb.transform.position + direction * i);
+                    destructionRange.Add(bombPosition + direction * i);
                 }
             }
-            print("Danger zone total tiles: " + dangerZone.Count);
+
+            return destructionRange;
+        }
+
+        public void AddToDangerZone(BombScript bomb)
+        {
+            var bombDestructionRange = BombDestructionRange(bomb.transform.position, bomb.bombSize);
+            dangerZone.AddRange(bombDestructionRange);
         }
 
         public void RemoveFromDangerZone(BombScript bomb)
@@ -144,7 +196,7 @@ namespace Assets.Scripts
 
             foreach (var direction in directions)
             {
-                for (int i = 1; i <= bomb.bombSize + 1; i++)
+                for (int i = 1; i <= bomb.bombSize; i++)
                 {
                     var zone = dangerZone.First(x => x == bomb.transform.position + direction * i);
                     dangerZone.Remove(zone);
