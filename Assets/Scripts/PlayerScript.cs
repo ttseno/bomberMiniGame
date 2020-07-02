@@ -67,7 +67,7 @@ public class PlayerScript : MonoBehaviour
             stats.IsDead = false;
         }
         else
-            Destroy(gameObject);        
+            EndGame();        
     }
     
     public void DeactivateBomb()
@@ -84,6 +84,7 @@ public class PlayerScript : MonoBehaviour
     public void Move(Vector3 direction)
     {
         if (stats.IsDead) return;
+
         ChangeSprite(SpriteToDirection[direction]);
 
         var newPosition = transform.position + direction;
@@ -135,6 +136,11 @@ public class PlayerScript : MonoBehaviour
             bombEvent.Invoke(this);
             stats.ActiveBombs++;
         }
+    }
+
+    private void EndGame()
+    {
+        FindObjectOfType<InGameManager>().EndGame();
     }
     
 }
