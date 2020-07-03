@@ -66,6 +66,8 @@ public class PlayerScript : MonoBehaviour
             ChangeSprite(skinConfig.DownSprite);
             stats.IsDead = false;
         }
+        else if (gameObject.name.Contains("Enemy"))
+            Destroy(gameObject);
         else
             EndGame();        
     }
