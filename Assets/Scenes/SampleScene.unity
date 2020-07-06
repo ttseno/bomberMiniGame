@@ -1458,7 +1458,7 @@ Rigidbody2D:
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!114 &518243784
 MonoBehaviour:
@@ -1836,6 +1836,11 @@ PrefabInstance:
       propertyPath: speed
       value: 0.22
       objectReference: {fileID: 0}
+    - target: {fileID: 6194637573345126052, guid: 9e4d3b144fea4c44fb718872ddd6b4a7,
+        type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6194637573345126053, guid: 9e4d3b144fea4c44fb718872ddd6b4a7,
         type: 3}
       propertyPath: bombEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -2019,6 +2024,11 @@ PrefabInstance:
         type: 3}
       propertyPath: speed
       value: 0.21
+      objectReference: {fileID: 0}
+    - target: {fileID: 6194637573345126052, guid: 9e4d3b144fea4c44fb718872ddd6b4a7,
+        type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6194637573345126053, guid: 9e4d3b144fea4c44fb718872ddd6b4a7,
         type: 3}
@@ -4230,6 +4240,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Player - Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 6194637573345126052, guid: 9e4d3b144fea4c44fb718872ddd6b4a7,
+        type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6194637573345126053, guid: 9e4d3b144fea4c44fb718872ddd6b4a7,
         type: 3}
