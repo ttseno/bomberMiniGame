@@ -1597,7 +1597,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.63625985}
-  m_AnchoredPosition: {x: 0, y: -4.8281}
+  m_AnchoredPosition: {x: 0, y: 25.1}
   m_SizeDelta: {x: 300, y: 9.65625}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &532358089
@@ -1726,7 +1726,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.63625985}
-  m_AnchoredPosition: {x: 0, y: -147}
+  m_AnchoredPosition: {x: 0, y: -113.4}
   m_SizeDelta: {x: 253.18701, y: -17.094147}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &714863008
@@ -1986,8 +1986,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 286c35df0cb96034fa7580debbcf79d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inGameMenuUI: {fileID: 0}
-  menuText: {fileID: 0}
+  inGameMenuUI: {fileID: 1363903732}
+  menuText: {fileID: 1250066177}
+  resumeButton: {fileID: 532358089}
 --- !u!4 &953952913
 Transform:
   m_ObjectHideFlags: 0
@@ -2299,7 +2300,7 @@ GameObject:
   - component: {fileID: 1250066178}
   - component: {fileID: 1250066177}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: MenuText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2801,7 +2802,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1363903733
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2897,7 +2898,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.63625985}
-  m_AnchoredPosition: {x: 0, y: -271}
+  m_AnchoredPosition: {x: 0, y: -218.7}
   m_SizeDelta: {x: 253.18701, y: -17.094147}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1696282591
