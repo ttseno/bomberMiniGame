@@ -43,7 +43,7 @@ public class PlayerScript : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collider)
     {
-        Debug.Log($"collision {collider.name}");
+        Debug.Log($"collision {gameObject.name} {collider.name}");
         if (collider.name.Contains("Bomb_trail"))
             Kill();
     }
@@ -67,7 +67,14 @@ public class PlayerScript : MonoBehaviour
             stats.IsDead = false;
         }
         else if (gameObject.name.Contains("Enemy"))
-            Destroy(gameObject);
+        {            
+            var players = GameObject.FindGameObjectsWithTag("Player");
+
+            if (players.Length <= 2)
+                WinGame();
+            else
+                Destroy(gameObject);
+        }            
         else
             EndGame();        
     }
@@ -138,6 +145,11 @@ public class PlayerScript : MonoBehaviour
             bombEvent.Invoke(this);
             stats.ActiveBombs++;
         }
+    }
+
+    private void WinGame()
+    {
+        FindObjectOfType<InGameManager>().EndGame("YOU WIN");
     }
 
     private void EndGame()

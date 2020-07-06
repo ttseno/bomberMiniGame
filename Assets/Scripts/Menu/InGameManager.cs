@@ -39,10 +39,10 @@ public class InGameManager : MonoBehaviour
         GameIsPaused = false;
     }
 
-    public void EndGame()
+    public void EndGame(string title = "GAME OVER")
     {
         print("GAME OVER");
-        menuText.text = "GAME OVER";
+        menuText.text = title;
         inGameMenuUI.SetActive(true);
         Time.timeScale = 0f;
         GameIsPaused = true;
