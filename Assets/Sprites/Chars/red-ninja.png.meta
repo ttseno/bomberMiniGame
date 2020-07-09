@@ -1,19 +1,19 @@
 fileFormatVersion: 2
-guid: fdef2815487f8404e98f0b4b566bdaaa
+guid: b01a21f99b649514bb03dd5156613169
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3697659687423380018
-    second: chars_ninja_red_left
+      213: -4332205790062655130
+    second: red-ninja_left
   - first:
-      213: -7041901255966371133
-    second: chars_ninja_red_back
+      213: -5177192441081515711
+    second: red-ninja_front
   - first:
-      213: 1001705069647437407
-    second: chars_ninja_red_front
+      213: 6958138638959203088
+    second: red-ninja_back
   - first:
-      213: -2383380216016006125
-    second: chars_ninja_red_right
+      213: 4124983094578110279
+    second: red-ninja_right
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -57,7 +57,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 350
+  spritePixelsToUnits: 750
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -96,6 +96,18 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
     buildTarget: WebGL
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -111,13 +123,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: chars_ninja_red_left
+      name: red-ninja_left
       rect:
         serializedVersion: 2
-        x: 61
-        y: 341
-        width: 207
-        height: 300
+        x: 0
+        y: 0
+        width: 461
+        height: 649
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -125,20 +137,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 23a072905e9b05330800000000000000
-      internalID: 3697659687423380018
+      spriteID: 669cc6579c9e0e3c0800000000000000
+      internalID: -4332205790062655130
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: chars_ninja_red_back
+      name: red-ninja_front
       rect:
         serializedVersion: 2
-        x: 362
-        y: 339
-        width: 226
-        height: 300
+        x: 477
+        y: 3
+        width: 461
+        height: 648
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -146,20 +158,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3c25fb60e14264e90800000000000000
-      internalID: -7041901255966371133
+      spriteID: 141bf7f97eae628b0800000000000000
+      internalID: -5177192441081515711
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: chars_ninja_red_front
+      name: red-ninja_back
       rect:
         serializedVersion: 2
-        x: 57
-        y: 15
-        width: 217
-        height: 300
+        x: 967
+        y: 7
+        width: 461
+        height: 649
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -167,20 +179,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f5e1b0e1475c6ed00800000000000000
-      internalID: 1001705069647437407
+      spriteID: 0135511f936409060800000000000000
+      internalID: 6958138638959203088
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: chars_ninja_red_right
+      name: red-ninja_right
       rect:
         serializedVersion: 2
-        x: 372
-        y: 15
-        width: 207
-        height: 300
+        x: 1450
+        y: 0
+        width: 461
+        height: 649
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -188,8 +200,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3141cab32588ceed0800000000000000
-      internalID: -2383380216016006125
+      spriteID: 74fd1d8f442ee3930800000000000000
+      internalID: 4124983094578110279
       vertices: []
       indices: 
       edges: []

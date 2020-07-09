@@ -1,19 +1,19 @@
 fileFormatVersion: 2
-guid: fe8e334a97c96d449ad06f30bb57cd39
+guid: b175a5014616dca49a1f7404220ffe85
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3435474632446302526
-    second: ninja_left
+      213: 839251062436158982
+    second: white-ninja_left
   - first:
-      213: 328472425487471295
-    second: ninja_back
+      213: 2782071308947011946
+    second: white-ninja_front
   - first:
-      213: -8267143829496680025
-    second: ninja_right
+      213: 2444150129884877483
+    second: white-ninja_back
   - first:
-      213: 5021437186470177531
-    second: ninja_front
+      213: 8262341793040306628
+    second: white-ninja_right
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -57,7 +57,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 350
+  spritePixelsToUnits: 750
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -107,89 +107,101 @@ TextureImporter:
     overridden: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ninja_left
+      name: white-ninja_left
       rect:
         serializedVersion: 2
-        x: 22
-        y: 203
-        width: 201
-        height: 291
+        x: 0
+        y: 0
+        width: 461
+        height: 649
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e39d3dde9f14daf20800000000000000
-      internalID: 3435474632446302526
+      spriteID: 60e50ed056e95ab00800000000000000
+      internalID: 839251062436158982
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ninja_back
+      name: white-ninja_front
       rect:
         serializedVersion: 2
-        x: 249
-        y: 349
-        width: 212
-        height: 281
+        x: 477
+        y: 3
+        width: 461
+        height: 648
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fb211bf3ee7fe8400800000000000000
-      internalID: 328472425487471295
+      spriteID: a69b79d8d17eb9620800000000000000
+      internalID: 2782071308947011946
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ninja_right
+      name: white-ninja_back
       rect:
         serializedVersion: 2
-        x: 473
-        y: 203
-        width: 201
-        height: 291
+        x: 955
+        y: 0
+        width: 460
+        height: 649
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7a1b9cffc74354d80800000000000000
-      internalID: -8267143829496680025
+      spriteID: ba2538de79d5be120800000000000000
+      internalID: 2444150129884877483
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ninja_front
+      name: white-ninja_right
       rect:
         serializedVersion: 2
-        x: 248
-        y: 21
-        width: 208
-        height: 288
+        x: 1450
+        y: 0
+        width: 461
+        height: 649
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bfaed71348abfa540800000000000000
-      internalID: 5021437186470177531
+      spriteID: 4c11803c51cb9a270800000000000000
+      internalID: 8262341793040306628
       vertices: []
       indices: 
       edges: []
